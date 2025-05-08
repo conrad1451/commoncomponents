@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
-import viteLogo from "/vite.svg"; // Assuming this is in the root
+import React, { useState } from "react";
+import viteLogo from "/vite.svg";
+import AutosuggestInput from "./AutosuggestInput"; // Import the AutosuggestInput component
 
 interface Suggestion {
   label: string;
@@ -9,11 +10,8 @@ interface Suggestion {
 const VitePlusTextBox = () => {
   const [count, setCount] = useState(0);
   const [text, setText] = useState("");
-  const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
-  const [showSuggestions, setShowSuggestions] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
 
-  // Example suggestions
+  // Example suggestions - these could come from a prop or an API.
   const allSuggestions: Suggestion[] = [
     { label: "Apple", value: "apple" },
     { label: "Banana", value: "banana" },
@@ -31,49 +29,18 @@ const VitePlusTextBox = () => {
     alert(text);
   };
 
-  // Filter and show suggestions
-  const handleTextChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const value = e.target.value;
-      setText(value);
-      if (value) {
-        const filteredSuggestions = allSuggestions.filter((suggestion) =>
-          suggestion.label.toLowerCase().includes(value.toLowerCase())
-        );
-        setSuggestions(filteredSuggestions);
-        setShowSuggestions(filteredSuggestions.length > 0);
-      } else {
-        setSuggestions([]);
-        setShowSuggestions(false);
-      }
-    },
-    [allSuggestions]
-  );
-
-  const handleSuggestionClick = (suggestionValue: string) => {
-    setText(suggestionValue);
-    setShowSuggestions(false);
-    if (inputRef.current) {
-      inputRef.current.focus();
-    }
+  const handleTextChange = (newText: string) => {
+    setText(newText);
   };
 
-  // Close suggestions on outside click
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        inputRef.current &&
-        !inputRef.current.contains(event.target as Node)
-      ) {
-        setShowSuggestions(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
+  const handleSuggestionClick = (selectedValue: string) => {
+    setText(selectedValue);
+    console.log("Selected value: ", selectedValue);
+  };
+  const handleUpdateTextFieldClick = () => {
+    // You can set a default value or use state to manage what value to set
+    setText("Updated Text"); // Simple example: set a fixed string
+  };
 
   return (
     <>
@@ -93,49 +60,21 @@ const VitePlusTextBox = () => {
       </div>
       <p className="read-the-docs">Click on the Vite logo to learn more</p>
 
-      <div style={{ position: "relative", width: "300px" }}>
-        <input
-          ref={inputRef}
-          type="text"
-          value={text}
-          onChange={handleTextChange}
-          placeholder="Enter text..."
-          style={{ width: "100%", padding: "8px", border: "1px solid #ccc" }}
+      <div>
+        <AutosuggestInput
+          onTextChange={handleTextChange}
+          onSuggestionClick={handleSuggestionClick}
+          suggestions={allSuggestions}
         />
+        <button
+          onClick={handleUpdateTextFieldClick}
+          style={{ marginTop: "8px" }}
+        >
+          Update text field
+        </button>
         <button onClick={handleClick} style={{ marginTop: "8px" }}>
           Show Alert
         </button>
-        {showSuggestions && (
-          <ul
-            style={{
-              position: "absolute",
-              top: "100%",
-              left: 0,
-              right: 0,
-              backgroundColor: "white",
-              border: "1px solid #ccc",
-              listStyleType: "none",
-              padding: 0,
-              margin: 0,
-              zIndex: 1,
-              boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-            }}
-          >
-            {suggestions.map((suggestion) => (
-              <li
-                key={suggestion.value}
-                onClick={() => handleSuggestionClick(suggestion.value)}
-                style={{
-                  padding: "8px",
-                  cursor: "pointer",
-                  ":hover": { backgroundColor: "#f0f0f0" },
-                }}
-              >
-                {suggestion.label}
-              </li>
-            ))}
-          </ul>
-        )}
       </div>
     </>
   );
