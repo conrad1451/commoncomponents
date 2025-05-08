@@ -35,11 +35,11 @@ const VitePlusTextBox = () => {
 
   const handleSuggestionClick = (selectedValue: string) => {
     setText(selectedValue);
-    console.log("Selected value: ", selectedValue);
+    console.log("Selescted value: ", selectedValue);
   };
   const handleUpdateTextFieldClick = () => {
     // You can set a default value or use state to manage what value to set
-    setText("Updated Text"); // Simple example: set a fixed string
+    setText(text); // Simple example: set a fixed string
   };
 
   return (
@@ -62,12 +62,19 @@ const VitePlusTextBox = () => {
 
       <div>
         <AutosuggestInput
-          onTextChange={handleTextChange}
-          onSuggestionClick={handleSuggestionClick}
+          onTextChange={() => {
+            // handleTextChange("test1");
+            handleTextChange(text);
+          }}
+          onSuggestionClick={() => {
+            handleSuggestionClick("test2");
+          }}
           suggestions={allSuggestions}
         />
         <button
-          onClick={handleUpdateTextFieldClick}
+          onClick={() => {
+            handleUpdateTextFieldClick();
+          }}
           style={{ marginTop: "8px" }}
         >
           Update text field

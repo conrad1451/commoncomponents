@@ -2,11 +2,25 @@ import { useState } from "react";
 // import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 
+import BasicDownshift from "./NewDropdownlist";
+interface Item {
+  value: string;
+}
+
+const items: Item[] = [
+  { value: "apple" },
+  { value: "guava" },
+  { value: "orange" },
+  { value: "grape" },
+  { value: "banana" },
+];
+
 function OldApp2() {
   const [count, setCount] = useState(0);
 
   return (
     <>
+      <BasicDownshift items={items} />
       <div>
         <a href="https://vite.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />

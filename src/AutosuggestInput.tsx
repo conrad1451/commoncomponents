@@ -101,7 +101,7 @@ const AutosuggestInput: React.FC<AutosuggestInputProps> = ({
           {suggestions.map((suggestion) => (
             <li
               key={suggestion.value}
-              onClick={() => handleSuggestionSelect(suggestion.value)}
+              onClick={() => handleSuggestionSelect(suggestion.label)} // Use suggestion.label here
               style={{
                 padding: "8px",
                 cursor: "pointer",
