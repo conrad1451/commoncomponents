@@ -1,9 +1,13 @@
 // CHQ: scaffolding created with Gemini AI assistance
 
 import React, { useState, useEffect, useCallback } from "react";
+
+// import React, { useEffect, useCallback } from "react";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import { motion, AnimatePresence } from "framer-motion";
+// import { motion, AnimatePresence } from "framer-motion";
+import InputAdornment from "@mui/material/InputAdornment";
+import SvgIcon from "@mui/material/SvgIcon";
 
 interface Suggestion {
   id: number;
@@ -25,7 +29,7 @@ const MagnifyingGlassIcon = (props: {
   size: number;
 }) => {
   return (
-    <>
+    <SvgIcon style={{ color: "gray" }} {...props}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"
@@ -50,7 +54,7 @@ const MagnifyingGlassIcon = (props: {
           y2={props.yPos + 12.65 + props.size * 1}
         ></line>
       </svg>
-    </>
+    </SvgIcon>
   );
 };
 
@@ -60,8 +64,7 @@ const CancelIcon = (props: { xPos: number; yPos: number; size: number }) => {
   const mySize = props.size;
 
   return (
-    <>
-      {" "}
+    <SvgIcon style={{ color: "gray" }} {...props}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox={"0 " + "0 " + mySize * 4 + " " + mySize * 4}
@@ -87,7 +90,45 @@ const CancelIcon = (props: { xPos: number; yPos: number; size: number }) => {
           y2={mySize * 3 + yPos}
         ></line>
       </svg>
-    </>
+    </SvgIcon>
+  );
+};
+
+const ArrowUpIcon = () => {
+  return (
+    <SvgIcon style={{ color: "gray" }}>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="w-5 h-5"
+      >
+        <polyline points="20 15 12 7 4 15"></polyline>
+      </svg>
+    </SvgIcon>
+  );
+};
+
+const ArrowDownIcon = () => {
+  return (
+    <SvgIcon style={{ color: "gray" }}>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="w-5 h-5"
+      >
+        <polyline points="4 9 12 17 20 9"></polyline>
+      </svg>
+    </SvgIcon>
   );
 };
 
@@ -181,23 +222,27 @@ const AutoCompleteSearch: React.FC<AutoCompleteSearchProps> = ({
           }}
           // onBlur={() => setIsFocused(false)}
           className="w-full pr-10"
-          InputProps={{
-            startAdornment: <MagnifyingGlassIcon xPos={0} yPos={0} size={4} />,
-            endAdornment: searchTerm ? (
-              <Button
-                variant="text"
-                size="small"
-                onClick={handleClear}
-                className="min-w-0"
-                style={{ padding: 0, marginRight: "8px" }}
-                aria-label="Clear search"
-              >
-                <CancelIcon xPos={0} yPos={0} size={6} />
-                {/* <CancelIcon xPos={0} yPos={0} size={3} /> */}{" "}
-                {/** same thing */}
-              </Button>
-            ) : null,
-          }}
+          startAdornment={
+            <InputAdornment position="start">
+              <MagnifyingGlassIcon xPos={0} yPos={0} size={4} />
+            </InputAdornment>
+          }
+          endAdornment={
+            searchTerm ? (
+              <InputAdornment position="end">
+                <Button
+                  variant="text"
+                  size="small"
+                  onClick={handleClear}
+                  className="min-w-0"
+                  style={{ padding: 0, marginRight: "8px" }}
+                  aria-label="Clear search"
+                >
+                  <CancelIcon xPos={0} yPos={0} size={6} />
+                </Button>
+              </InputAdornment>
+            ) : null
+          }
         />
         <Button
           variant="text"
@@ -207,33 +252,7 @@ const AutoCompleteSearch: React.FC<AutoCompleteSearchProps> = ({
           style={{ padding: 0 }}
           aria-label="Toggle suggestions"
         >
-          {showSuggestions ? (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="w-5 h-5"
-            >
-              <polyline points="20 15 12 7 4 15"></polyline>
-            </svg>
-          ) : (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="w-5 h-5"
-            >
-              <polyline points="4 9 12 17 20 9"></polyline>
-            </svg>
-          )}
+          {showSuggestions ? <ArrowUpIcon /> : <ArrowDownIcon />}
         </Button>
         <Button
           variant="text"
@@ -248,32 +267,25 @@ const AutoCompleteSearch: React.FC<AutoCompleteSearchProps> = ({
         </Button>
       </div>
 
-      <AnimatePresence>
-        {showSuggestions && (
-          <motion.ul
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg"
-          >
-            {isLoading ? (
-              <li className="px-4 py-2 text-gray-500">Loading...</li>
-            ) : suggestions.length === 0 ? (
-              <li className="px-4 py-2 text-gray-500">No suggestions found</li>
-            ) : (
-              suggestions.map((suggestion) => (
-                <li
-                  key={suggestion.id}
-                  onClick={() => handleSuggestionClick(suggestion)}
-                  className="px-4 py-2 cursor-pointer hover:bg-gray-100"
-                >
-                  {suggestion.title}
-                </li>
-              ))
-            )}
-          </motion.ul>
-        )}
-      </AnimatePresence>
+      {showSuggestions && (
+        <ul>
+          {isLoading ? (
+            <li className="px-4 py-2 text-gray-500">Loading...</li>
+          ) : suggestions.length === 0 ? (
+            <li className="px-4 py-2 text-gray-500">No suggestions found</li>
+          ) : (
+            suggestions.map((suggestion) => (
+              <li
+                key={suggestion.id}
+                onClick={() => handleSuggestionClick(suggestion)}
+                className="px-4 py-2 cursor-pointer hover:bg-gray-100"
+              >
+                {suggestion.title}
+              </li>
+            ))
+          )}
+        </ul>
+      )}
     </div>
   );
 };
