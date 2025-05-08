@@ -1,13 +1,13 @@
 // CHQ: scaffolding created with Gemini AI assistance
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 
 // import React, { useEffect, useCallback } from "react";
-import TextField from "@mui/material/TextField";
+// import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 // import { motion, AnimatePresence } from "framer-motion";
-import InputAdornment from "@mui/material/InputAdornment";
-import SvgIcon from "@mui/material/SvgIcon";
+// import InputAdornment from "@mui/material/InputAdornment";
+// import SvgIcon from "@mui/material/SvgIcon";
 
 interface Suggestion {
   id: number;
@@ -23,6 +23,7 @@ interface AutoCompleteSearchProps {
   onSelect?: (item: string) => void;
 }
 
+/*
 const MagnifyingGlassIcon = (props: {
   xPos: number;
   yPos: number;
@@ -71,7 +72,7 @@ const CancelIcon = (props: { xPos: number; yPos: number; size: number }) => {
         fill="none"
         stroke="currentColor"
         // strokeWidth="2"
-        strokeWidth={mySize / 3}
+        strokeWidth={props.size / 3}
         strokeLinecap="round"
         strokeLinejoin="round"
         style={{ color: "gray" }}
@@ -93,42 +94,40 @@ const CancelIcon = (props: { xPos: number; yPos: number; size: number }) => {
     </SvgIcon>
   );
 };
-
+*/
 const ArrowUpIcon = () => {
   return (
-    <SvgIcon style={{ color: "gray" }}>
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        className="w-5 h-5"
-      >
-        <polyline points="20 15 12 7 4 15"></polyline>
-      </svg>
-    </SvgIcon>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="w-5 h-5"
+      style={{ color: "gray" }}
+    >
+      <polyline points="20 15 12 7 4 15"></polyline>
+    </svg>
   );
 };
 
 const ArrowDownIcon = () => {
   return (
-    <SvgIcon style={{ color: "gray" }}>
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        className="w-5 h-5"
-      >
-        <polyline points="4 9 12 17 20 9"></polyline>
-      </svg>
-    </SvgIcon>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="w-5 h-5"
+      style={{ color: "gray" }}
+    >
+      <polyline points="4 9 12 17 20 9"></polyline>
+    </svg>
   );
 };
 
@@ -141,6 +140,7 @@ const AutoCompleteSearch: React.FC<AutoCompleteSearchProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   // const [isFocused, setIsFocused] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false); // New state for controlling suggestion visibility
+  const inputRef = useRef<HTMLInputElement>(null);
 
   // Simulate fetching suggestions from an API
   const fetchSuggestions = useCallback(
@@ -190,9 +190,6 @@ const AutoCompleteSearch: React.FC<AutoCompleteSearchProps> = ({
     setShowSuggestions(false);
   };
 
-  const inputRef = React.useRef<HTMLInputElement>(null);
-
-  // Function to toggle suggestions visibility
   const toggleSuggestions = () => {
     setShowSuggestions((prev) => !prev);
   };
@@ -208,8 +205,8 @@ const AutoCompleteSearch: React.FC<AutoCompleteSearchProps> = ({
   return (
     <div className="relative w-full max-w-md mx-auto">
       <div className="relative flex items-center w-full">
-        <TextField
-          inputRef={inputRef}
+        <input
+          ref={inputRef}
           type="text"
           placeholder="Search..."
           value={searchTerm}
@@ -221,28 +218,7 @@ const AutoCompleteSearch: React.FC<AutoCompleteSearchProps> = ({
             }
           }}
           // onBlur={() => setIsFocused(false)}
-          className="w-full pr-10"
-          startAdornment={
-            <InputAdornment position="start">
-              <MagnifyingGlassIcon xPos={0} yPos={0} size={4} />
-            </InputAdornment>
-          }
-          endAdornment={
-            searchTerm ? (
-              <InputAdornment position="end">
-                <Button
-                  variant="text"
-                  size="small"
-                  onClick={handleClear}
-                  className="min-w-0"
-                  style={{ padding: 0, marginRight: "8px" }}
-                  aria-label="Clear search"
-                >
-                  <CancelIcon xPos={0} yPos={0} size={6} />
-                </Button>
-              </InputAdornment>
-            ) : null
-          }
+          className="w-full pr-10 border rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500" // Added some basic styling
         />
         <Button
           variant="text"
@@ -263,7 +239,7 @@ const AutoCompleteSearch: React.FC<AutoCompleteSearchProps> = ({
           aria-label="Add to list"
         >
           Add to list
-          {/* <CancelIcon xPos={0} yPos={0} size={3} /> */} {/** same thing */}
+          {/* <CancelIcon xPos={0} yPos={0} size={3} /> */}
         </Button>
       </div>
 
