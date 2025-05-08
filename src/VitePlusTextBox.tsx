@@ -4,6 +4,11 @@ import viteLogo from "/vite.svg";
 
 function VitePlusTextBox() {
   const [count, setCount] = useState(0);
+  const [text, setText] = useState("");
+
+  const handleClick = () => {
+    alert(text);
+  };
 
   return (
     <>
@@ -13,7 +18,7 @@ function VitePlusTextBox() {
         </a>
         {/* <a href="https://react.dev" target="_blank">
           <img src={reactLogo} className="logo react" alt="React logo" />
-        </a> */}
+        </a>*/}
       </div>
       <h1>Vite</h1>
       <div className="card">
@@ -25,6 +30,16 @@ function VitePlusTextBox() {
         </p>
       </div>
       <p className="read-the-docs">Click on the Vite logo to learn more</p>
+
+      <div>
+        <input
+          type="text"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          placeholder="Enter text..."
+        />
+        <button onClick={handleClick}>Show Alert</button>
+      </div>
     </>
   );
 }
